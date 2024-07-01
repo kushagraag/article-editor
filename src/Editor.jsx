@@ -3,8 +3,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 import styled from "styled-components";
-// import handleImageUpload from "./imageUploadHandler"; // Import image upload handler
-// import handleVideoUpload from "./videoUploadHandler"; // Import video upload handler
 
 const Heading = styled.input`
   marginbottom: "20px";
@@ -62,43 +60,13 @@ const Editor = () => {
         );
 
         const range = quillRef.getEditor().getSelection();
-        const imageUrl = response.data.imageUrl;
-
-        // Check image dimensions
-        const img = new Image();
-        img.onload = function () {
-          const maxWidth = 600; // Define your maximum width here
-          const naturalWidth = this.width;
-          const naturalHeight = this.height;
-
-          // Calculate resizing if necessary
-          let width = naturalWidth;
-          let height = naturalHeight;
-          if (naturalWidth > maxWidth) {
-            width = maxWidth;
-            height = (maxWidth * naturalHeight) / naturalWidth;
-          }
-
-          // Insert the image with resized dimensions
-          quillRef.getEditor().insertEmbed(range.index, "image", {
-            src: imageUrl,
-            width,
-            height,
-          });
-        };
-        img.src = imageUrl;
+        quillRef
+          .getEditor()
+          .insertEmbed(range.index, "image", response.data.imageUrl);
       } catch (error) {
         console.error("Error uploading image:", error);
       }
     };
-  }, [quillRef]);
-
-  const handleVideoUpload = useCallback(() => {
-    const url = window.prompt("Enter the video URL");
-    if (!url) return;
-
-    const range = quillRef.getEditor().getSelection();
-    quillRef.getEditor().insertEmbed(range.index, "video", url);
   }, [quillRef]);
 
   const modules = {
@@ -120,7 +88,6 @@ const Editor = () => {
       ],
       handlers: {
         image: handleImageUpload,
-        video: handleVideoUpload,
       },
     },
   };
