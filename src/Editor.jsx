@@ -1,8 +1,14 @@
 import React, { useState, useCallback } from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 import styled from "styled-components";
+import ReactQuill, { Quill } from "react-quill";
+import QuillResizeImage from "quill-resize-image";
+
+import handleImageUpload from "./imageUploadHandler"; // Import image upload handler
+import handleVideoUpload from "./videoUploadHandler"; // Import video upload handler
+
+Quill.register("modules/resize", QuillResizeImage);
 
 const Heading = styled.input`
   marginbottom: "20px";
@@ -70,6 +76,11 @@ const Editor = () => {
   }, [quillRef]);
 
   const modules = {
+    resize: {
+      locale: {
+        center: "center",
+      },
+    },
     toolbar: {
       container: [
         [{ header: "1" }, { header: "2" }, { font: [] }],
